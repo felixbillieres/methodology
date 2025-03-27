@@ -52,22 +52,18 @@ nmap -p 389,636,3268,3269,53,88,464 [SUBNET]/[MASK]
 # Requête DNS pour localiser DCs
 host -t SRV _ldap._tcp.inlanefreight.local
 ```
-
 ## Services Exposés
-
 ### Énumération SMB
 
 ```bash
 nmap --script smb-protocols,smb-security-mode,smb-enum-shares [TARGET_IP]
 ```
-
 ### Services d'Authentification
 
 ```bash
 # Vérifier les services Kerberos et LDAP
 nmap -p 88,389,636,3268,3269 --script=ldap-search,ldap-rootdse [TARGET_IP]
 ```
-
 ### Détection des Services Web
 
 ```bash
@@ -88,7 +84,6 @@ rpcclient $> enumdomusers
 # Avec identifiants valides
 rpcclient -U "username%password" [DC_IP]
 ```
-
 ### Vérifier la Politique de Mot de Passe
 
 ```bash
@@ -98,7 +93,6 @@ enum4linux -P [DC_IP]
 # Avec identifiants
 crackmapexec smb [DC_IP] -u username -p password --pass-pol
 ```
-
 ## Points Clés à Noter
 
 - Noms de domaine complets (FQDN) des contrôleurs de domaine

