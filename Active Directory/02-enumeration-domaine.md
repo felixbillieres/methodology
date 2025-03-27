@@ -55,7 +55,6 @@ Get-DomainController | select Name,IPAddress,Domain,Forest,OSVersion,Roles
 # Avec LDAP
 ldapsearch -x -h [DC_IP] -D "username@domain.local" -w "password" -b "DC=domain,DC=local" "(userAccountControl:1.2.840.113556.1.4.803:=8192)"
 ```
-
 ## Énumération des Politiques de Mots de Passe
 
 ```bash

