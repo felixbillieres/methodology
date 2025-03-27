@@ -51,3 +51,27 @@ Get-AppLockerPolicy -Local | Test-AppLockerPolicy -path C:\Windows\System32\cmd.
 sc query windefend
 netsh advfirewall show currentprofile
 ```
+## Techniques d'élévation de privilèges Windows dans des Box
+### Analyse des services et ports ouverts
+Exemple (Legacy):
+```bash
+# Utiliser Nmap avec des scripts de vulnérabilité
+nmap -p 445 --script vuln <IP>
+
+# Identifier les services vulnérables
+nmap -sV -p <PORT> <IP>
+```
+### Énumération des partages SMB
+Exemple (Nest):
+```bash
+# Énumération des partages avec smbmap
+smbmap -H <IP> -u null
+
+# Connexion anonyme avec smbclient
+smbclient -N //<IP>/<SHARE>
+
+# Téléchargement récursif de fichiers
+smb: \> recurse ON
+smb: \> prompt OFF
+smb: \> mget *
+```

